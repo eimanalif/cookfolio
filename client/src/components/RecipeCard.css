@@ -1,0 +1,23 @@
+.recipe-card {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    width: 300px; /* Adjust width as needed */
+  }
+  
+  .recipe-card-image {
+    width: 100%;
+    height: 200px; /* Adjust height as needed */
+    object-fit: cover; /* Ensures image fills container */
+  }
+  
+  .recipe-card-info {
+    padding: 10px;
+  }
+  
+  .recipe-card-info h3 {
+    margin-bottom: 5px;
+  }
