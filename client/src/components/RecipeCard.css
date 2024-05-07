@@ -1,23 +1,30 @@
 .recipe-card {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    width: 300px; /* Adjust width as needed */
-  }
-  
-  .recipe-card-image {
-    width: 100%;
-    height: 200px; /* Adjust height as needed */
-    object-fit: cover; /* Ensures image fills container */
-  }
-  
-  .recipe-card-info {
-    padding: 10px;
-  }
-  
-  .recipe-card-info h3 {
-    margin-bottom: 5px;
-  }
+  /* Styles for the recipe card container */
+  border: 1px solid #ddd;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 5px;
+}
+
+.recipe-image {
+  /* Styles for the recipe image */
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.recipe-ingredients {
+  /* Styles for the ingredients list */
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+.view-button {
+  /* Styles for the view recipe button */
+  background-color: #007bff;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
