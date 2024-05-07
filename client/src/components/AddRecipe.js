@@ -1,70 +1,41 @@
 import React, { useState } from 'react';
+// eslint-disable-next-line
 import { useNavigate } from 'react-router-dom'; // for navigation
 
 const AddRecipe = () => {
-  const [name, setName] = useState('');
-  const [ingredients, setIngredients] = useState([]);
-  const [instructions, setInstructions] = useState('');
-  const [image, setImage] = useState(null); // For image upload (optional)
-
-  const navigate = useNavigate(); // Hook for navigation
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    // Prepare recipe data object
-    const recipe = {
-      name,
-      ingredients,
-      instructions,
-      image, // Assuming you have logic to handle uploaded image
-    };
-
-    // Implement logic to send recipe data to your backend API (replace with your actual logic)
-    console.log('Submitted recipe:', recipe);
-    // ... (API integration logic)
-
-    // Handle successful submission (e.g., reset form, navigate back to recipe list)
-    setName('');
-    setIngredients([]);
-    setInstructions('');
-   // setImage(null);
-    navigate('/recipes'); // Navigate back to recipe list page
+  const [newRecipe, setNewRecipe] = useState({
+    title: '',
+    ingredients: [],
+    instructions: '',
+    // Add other recipe properties
+  });
+// eslint-disable-next-line
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setNewRecipe({ ...newRecipe, [name]: value });  // Update specific property
+  };
+// eslint-disable-next-line
+  const handleIngredientChange = (index, event) => {
+    // Implement logic to update ingredients array based on index and new value
+  };
+// eslint-disable-next-line
+  const handleInstructionChange = (event) => {
+    // Implement logic to update instructions based on new value
   };
 
-  // Implement functions to handle ingredient changes, instruction changes, and image upload (if applicable)
+  const handleSubmit = (event) => {
+    event.preventDefault(); // Prevent default form submission behavior
+    // Implement logic to save the new recipe (e.g., using an API or local storage)
+    console.log('New recipe:', newRecipe); // Example: Log the new recipe data
+    // You can clear the form or navigate back to the recipe list after successful submission
+  };
 
   return (
-    <div className="add-recipe-form">
-      <h2>Add a New Recipe</h2>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="name">Recipe Name:</label>
-        <input
-          type="text"
-          id="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
-        <label htmlFor="ingredients">Ingredients:</label>
-        {ingredients.map((ingredient, index) => (
-          <div key={index}>
-            <input
-              type="text"
-              value={ingredient}
-              //onChange={(e) => handleIngredientChange(e, index)}
-            />
-            {index > 0 && <button onClick={() => setIngredients(ingredients.slice(0, index))}>Remove</button>}
-          </div>
-        ))}
-        <button type="button" onClick={() => setIngredients([...ingredients, ""])}>
-          Add Ingredient
-        </button>
-        <label htmlFor="instructions">Instructions:</label>
-        {/* Add form fields for image upload (if applicable) */}
-        <button type="submit">Save Recipe</button>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit}>
+      {/* Form elements to capture recipe details (title, ingredients, instructions, etc.) */}
+      {/* Use handleChange, handleIngredientChange, and handleInstructionChange for form updates */}
+      <button type="submit">Save Recipe</button>
+    </form>
   );
 };
 

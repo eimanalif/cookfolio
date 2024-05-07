@@ -1,6 +1,7 @@
 //import logo from './logo.svg';
 import './App.css';
 import React from 'react';
+// eslint-disable-next-line
 import { useNavigate } from 'react-router-dom'; // for navigation (if needed)
 import Header from './components/Header'; // Assuming Header.js exists in components folder
 import RecipeList from './components/RecipeList';
@@ -27,7 +28,7 @@ function App() {
       </div>
     </BrowserRouter>
   );
-
+// eslint-disable-next-line
   return (
     <div className="App">
       <h1>Cookfolio</h1>
@@ -36,6 +37,17 @@ function App() {
     </div>
   );
 }
+
+const handleAddRecipeClick = () => {
+  console.log('Add recipe button clicked!');
+  // You can navigate to the add recipe route here
+  // navigate('/add-recipe');
+};
+
+return (
+  // ... rest of your return statement
+  <AddRecipeButton onClick={handleAddRecipeClick} />
+);
 
 //function App() {
   //return (
