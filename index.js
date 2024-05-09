@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 5000; // Use environment variable for port or default to 5000
+const axios = require('axios/dist/node/axios.cjs');
 
 // Add middleware 
 app.use(express.json()); // Parse incoming JSON data

@@ -1,73 +1,59 @@
-//import logo from './logo.svg';
-import './App.css';
-import React from 'react';
-// eslint-disable-next-line
-import { useNavigate } from 'react-router-dom'; // for navigation (if needed)
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // for navigation
 import Header from './components/Header'; // Assuming Header.js exists in components folder
 import RecipeList from './components/RecipeList';
 import AddRecipeButton from './components/AddRecipeButton';
+// eslint-disable-next-line
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+//import { NotificationProvider } from './components/NotificationContext';
 import AddRecipe from './components/AddRecipe'; // Import AddRecipe component
+import RecipeDetails from './components/RecipeDetails';
+import RecipeForm from './components/RecipeForm';
+//import MyComponent from './MyComponent'; 
+
+
+const initialRecipes = [
+  {
+    id: 1,
+    name: "Chocolate Chip Cookies",
+    ingredients: ["1 cup flour", "1/2 cup butter", "1 cup chocolate chips"],
+  },
+  // ... more recipes
+];
 
 function App() {
-  // Decide how to use handleAddRecipeClick (navigation or other logic)
-  const handleAddRecipeClick = () => {
-    console.log('Add recipe button clicked!');
-    // You can use navigate('/add-recipe') here if needed
-  };
+  const navigate = useNavigate(); // Get navigation function
 
-  return (
-    <BrowserRouter>
-      <div className="App">
-        <Header />
-        <Routes>
-          <Route path="/" element={<RecipeList />} />
-          <Route path="/add-recipe" element={<AddRecipe />} />
-        </Routes>
-        <AddRecipeButton onClick={handleAddRecipeClick} />
-      </div>
-    </BrowserRouter>
-  );
-// eslint-disable-next-line
+  const [recipes, setRecipes] = useState(initialRecipes);
+  const [selectedRecipeId, setSelectedRecipeId] = useState(null);
+
+  const handleSelectRecipe = (id) => {
+    setSelectedRecipeId(id);
+  };
+  const handleAddRecipeClick = () => {
+    navigate('/add-recipe');
+  };
+  
   return (
     <div className="App">
-      <h1>Cookfolio</h1>
-      <RecipeList /> {/* Add RecipeList component */}
-      <AddRecipeButton onClick={handleAddRecipeClick} />
+        <Header />
+        <Routes>
+            <Route path="/" element={<RecipeList recipes={recipes} onSelectRecipe={handleSelectRecipe} />} />
+            <Route path="/add-recipe" element={<AddRecipe />} />
+        </Routes>
+        <AddRecipeButton onClick={handleAddRecipeClick} />
+        {/* Render RecipeDetails or RecipeForm conditionally based on selectedRecipeId */}
+        {selectedRecipeId ? (
+            <RecipeDetails recipes={recipes} selectedRecipe={selectedRecipeId} />
+        ) : (
+            <RecipeForm
+                recipes={recipes}
+                setRecipes={setRecipes}
+                selectedRecipe={recipes.find((r) => r.id === selectedRecipeId)}
+            />
+        )}
     </div>
-  );
-}
-
-const handleAddRecipeClick = () => {
-  console.log('Add recipe button clicked!');
-  // You can navigate to the add recipe route here
-  // navigate('/add-recipe');
-};
-
-return (
-  // ... rest of your return statement
-  <AddRecipeButton onClick={handleAddRecipeClick} />
 );
-
-//function App() {
-  //return (
-    //<div className="App">
-   //   <header className="App-header">
-      //  <img src={logo} className="App-logo" alt="logo" />
-        //<p>
-      //    Edit <code>src/App.js</code> and save to reload.
-       // </p>
-      //  <a
-          //className="App-link"
-         // href="https://reactjs.org"
-        //  target="_blank"
-        //  rel="noopener noreferrer"
-      //  >
-       //   Learn React
-      //  </a>
-    //  </header>
-   // </div>
-  //);
-//}
+}
 
 export default App;

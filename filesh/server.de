@@ -1,0 +1,98 @@
+const express = require('express');
+const cors = require('cors'); // To allow requests from frontend (adjust as needed)
+
+const app = express();
+const port = process.env.PORT || 5000; // Listen on port 5000 by default
+
+// Replace with your in-memory or database logic for notifications
+let notifications = [];
+
+app.use(cors()); // Enable CORS for frontend requests (adjust as needed)
+
+app.get('/api/notifications', (req, res) => {
+  // Implement logic to retrieve user-specific notifications
+  // (e.g., based on user ID from request headers)
+  const userId = req.headers.userid; // Example (adjust based on your authentication)
+
+  const userNotifications = notifications.filter(
+    (notification) => notification.userId === userId
+  );
+
+  res.json(userNotifications);
+});
+
+app.post('/api/notifications', (req, res) => {
+  // Implement logic to add a notification
+  const { message, type, userId } = req.body; // Example data format
+
+  notifications.push({ message, type, userId });
+
+  res.json({ message: 'Notification added' });
+});
+
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+});
+
+
+
+const mongoose = require('mongoose');
+
+const mongoURI = 'mongodb://localhost:27017/cookfolio-notifications'; // Replace with your connection string
+
+mongoose.connect(mongoURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+  .then(() => console.log('MongoDB connected'))
+  .catch((err) => console.error('MongoDB connection error:', err));
+
+  const NotificationSchema = new mongoose.Schema({
+    message: {
+      type: String,
+      required: true,
+    },
+    type: {
+      type: String,
+      enum: ['success', 'error', 'info'], // Add other types as needed
+      required: true,
+    },
+    userId: {
+      type: String,
+      required: true,
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+  });
+  
+  const Notification = mongoose.model('Notification', NotificationSchema);
+
+
+
+  // GET /api/notifications
+app.get('/api/notifications', async (req, res) => {
+    try {
+      const userId = req.headers.userid;
+      const notifications = await Notification.find({ userId }); // Filter by userId
+      res.json(notifications);
+    } catch (error) {
+      console.error('/api/notifications GET error:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+  
+  // POST /api/notifications
+  app.post('/api/notifications', async (req, res) => {
+    try {
+      const { message, type, userId } = req.body;
+      const newNotification = new Notification({ message, type, userId });
+      await newNotification.save();
+      res.json({ message: 'Notification added' });
+    } catch (error) {
+      console.error('/api/notifications POST error:', error);
+      res.status(400).json({ message: 'Error adding notification' });
+    }
+  });
+  
