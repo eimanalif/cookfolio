@@ -1,80 +1,40 @@
 import React, { useState } from 'react';
 
-const AddRecipeForm = ({ onSubmit }) => {
-  const [name, setName] = useState('');
-  const [ingredients, setIngredients] = useState([]);
-  const [instructions, setInstructions] = useState('');
-  const [image, setImage] = useState(null); // For image upload
+const AddRecipeForm = ({ onAddRecipe }) => {
+  const [title, setTitle] = useState('');
+  const [ingredients, setIngredients] = useState('');
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    // Prepare recipe data object
-    const recipe = {
-      name,
-      ingredients,
-      instructions,
-      image, // Assuming you have logic to handle uploaded image
-    };
-
-    // Call the onSubmit function passed as a prop
-    // This function likely handles form submission logic (validation, sending data to backend)
-    onSubmit(recipe);
-
-    // Reset form state after submission (optional)
-    setName('');
-    setIngredients([]);
-    setInstructions('');
-    setImage(null);
-  };
-
-  const handleIngredientChange = (event, index) => {
-    const newIngredients = [...ingredients];
-    if (index === ingredients.length) {
-      // Adding a new ingredient
-      newIngredients.push(event.target.value);
-    } else {
-      // Editing an existing ingredient
-      newIngredients[index] = event.target.value;
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (title.trim() && ingredients.trim()) {
+      const newRecipe = {
+        id: Date.now().toString(),
+        name: title,
+        ingredients: ingredients.split(',').map(ingredient => ingredient.trim()),
+      };
+      onAddRecipe(newRecipe);
+      setTitle('');
+      setIngredients('');
     }
-    setIngredients(newIngredients);
   };
-
-  const handleInstructionChange = (event) => {
-    setInstructions(event.target.value);
-  };
-
-  // Add functions to handle image upload (if applicable)
 
   return (
-    <form className="add-recipe-form" onSubmit={handleSubmit}>
-      <h2>Add a New Recipe</h2>
-      <label htmlFor="name">Recipe Name:</label>
+    <form onSubmit={handleSubmit}>
       <input
         type="text"
-        id="name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Recipe Title"
         required
       />
-      <label htmlFor="ingredients">Ingredients:</label>
-      {ingredients.map((ingredient, index) => (
-        <div key={index}>
-          <input
-            type="text"
-            value={ingredient}
-            onChange={(e) => handleIngredientChange(e, index)}
-          />
-          {index > 0 && <button onClick={() => setIngredients(ingredients.slice(0, index))}>Remove</button>}
-        </div>
-      ))}
-      <button type="button" onClick={() => setIngredients([...ingredients, ""])}>
-        Add Ingredient
-      </button>
-      <label htmlFor="instructions">Instructions:</label>
-      <textarea id="instructions" value={instructions} onChange={handleInstructionChange} required />
-      {/* Add form fields for image upload (if applicable) */}
-      <button type="submit">Save Recipe</button>
+      <input
+        type="text"
+        value={ingredients}
+        onChange={(e) => setIngredients(e.target.value)}
+        placeholder="Ingredients (comma-separated)"
+        required
+      />
+      <button type="submit">Add Recipe</button>
     </form>
   );
 };

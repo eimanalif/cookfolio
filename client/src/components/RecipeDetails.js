@@ -1,33 +1,19 @@
-import { useState, useEffect } from 'react';
+import React from 'react';
 
-const RecipeDetails = ({ selectedRecipeId }) => {
-    const [recipe, setRecipe] = useState(null);
+const RecipeDetails = ({ recipes, selectedRecipe }) => {
+  const recipe = recipes.find(r => r.id === selectedRecipe);
+  if (!recipe) return <p>No recipe found</p>;
 
-    useEffect(() => {
-        const fetchRecipe = async () => {
-            const response = await fetch(`/api/recipes/${selectedRecipeId}`); // Assuming API endpoint
-            const fetchedRecipe = await response.json();
-            setRecipe(fetchedRecipe);
-        };
-
-        if (selectedRecipeId) { // Fetch only if ID exists
-            fetchRecipe();
-        }
-    }, [selectedRecipeId]); // Re-fetch on ID change
-
-    return (
-        <div>
-            {recipe ? (
-                <>
-                    <h2>{recipe.title}</h2>
-                    <p>ID: {recipe.id}</p>
-                    {/* Render other recipe details */}
-                </>
-            ) : (
-                <p>Loading recipe details...</p>
-            )}
-        </div>
-    );
+  return (
+    <div>
+      <h2>{recipe.name}</h2>
+      <ul>
+        {recipe.ingredients.map((ingredient, index) => (
+          <li key={index}>{ingredient}</li>
+        ))}
+      </ul>
+    </div>
+  );
 };
 
 export default RecipeDetails;

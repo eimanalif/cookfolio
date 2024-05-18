@@ -1,45 +1,43 @@
+// AddRecipeForm.js
 import React, { useState } from 'react';
 
-function RecipeForm({ recipes, setRecipes, selectedRecipe }) {
-  const [ingredient, setIngredient] = useState(''); // State for the new ingredient
+const AddRecipeForm = ({ onAddRecipe }) => {
+  const [title, setTitle] = useState('');
+  const [ingredients, setIngredients] = useState('');
 
-  const handleSubmit = async (e) => {
+  const handleAddRecipe = (e) => {
     e.preventDefault();
-    if (!ingredient.trim()) {
-      alert("Please enter an ingredient name!");
-      return;
-    }
-
-    try {
-      // Update the selected recipe with the new ingredient
-      setRecipes((prevRecipes) =>
-        prevRecipes.map((recipe) =>
-          recipe.id === selectedRecipe.id
-            ? { ...recipe, ingredients: [...recipe.ingredients, ingredient] }
-            : recipe
-        )
-      );
-      setIngredient(''); // Clear input field after submission
-    } catch (error) {
-      console.error("Error updating recipes:", error);
-      alert("Failed to update recipe. Please try again later.");
+    if (title.trim() && ingredients.trim()) {
+      const newRecipe = {
+        _id: Date.now().toString(), // Simple unique ID based on timestamp
+        title,
+        ingredients: ingredients.split(',').map(ingredient => ingredient.trim()), // Split ingredients by comma and trim spaces
+      };
+      onAddRecipe(newRecipe);
+      setTitle('');
+      setIngredients('');
     }
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="ingredient">Ingredient:</label>
-        <input
-          type="text"
-          id="ingredient"
-          value={ingredient}
-          onChange={(e) => setIngredient(e.target.value)}
-        />
-        <button type="submit">Add Ingredient</button>
-      </form>
-    </div>
+    <form onSubmit={handleAddRecipe}>
+      <input
+        type="text"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Recipe Title"
+        required
+      />
+      <input
+        type="text"
+        value={ingredients}
+        onChange={(e) => setIngredients(e.target.value)}
+        placeholder="Ingredients (comma-separated)"
+        required
+      />
+      <button type="submit">Add Recipe</button>
+    </form>
   );
-}
+};
 
-export default RecipeForm;
+export default AddRecipeForm;

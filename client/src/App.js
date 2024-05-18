@@ -1,16 +1,10 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // for navigation
-import Header from './components/Header'; // Assuming Header.js exists in components folder
-import RecipeList from './components/RecipeList';
-import AddRecipeButton from './components/AddRecipeButton';
-// eslint-disable-next-line
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-//import { NotificationProvider } from './components/NotificationContext';
-import AddRecipe from './components/AddRecipe'; // Import AddRecipe component
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import Header from './components/Header';
+import Homepage from './components/Homepage';
+import AddRecipe from './components/AddRecipe';
 import RecipeDetails from './components/RecipeDetails';
-import RecipeForm from './components/RecipeForm';
-//import MyComponent from './MyComponent'; 
-
+import './App.css'; // Import the CSS file
 
 const initialRecipes = [
   {
@@ -22,38 +16,44 @@ const initialRecipes = [
 ];
 
 function App() {
-  const navigate = useNavigate(); // Get navigation function
-
+  const navigate = useNavigate();
   const [recipes, setRecipes] = useState(initialRecipes);
   const [selectedRecipeId, setSelectedRecipeId] = useState(null);
 
   const handleSelectRecipe = (id) => {
     setSelectedRecipeId(id);
   };
-  const handleAddRecipeClick = () => {
-    navigate('/add-recipe');
+
+  const handleAddRecipe = (newRecipe) => {
+    setRecipes([...recipes, { ...newRecipe, id: Date.now().toString() }]);
+    navigate('/');
   };
-  
+
   return (
     <div className="App">
-        <Header />
-        <Routes>
-            <Route path="/" element={<RecipeList recipes={recipes} onSelectRecipe={handleSelectRecipe} />} />
-            <Route path="/add-recipe" element={<AddRecipe />} />
-        </Routes>
-        <AddRecipeButton onClick={handleAddRecipeClick} />
-        {/* Render RecipeDetails or RecipeForm conditionally based on selectedRecipeId */}
-        {selectedRecipeId ? (
-            <RecipeDetails recipes={recipes} selectedRecipe={selectedRecipeId} />
-        ) : (
-            <RecipeForm
-                recipes={recipes}
-                setRecipes={setRecipes}
-                selectedRecipe={recipes.find((r) => r.id === selectedRecipeId)}
-            />
+      <Header />
+      <Routes>
+        <Route 
+          path="/" 
+          element={<Homepage 
+            recipes={recipes} 
+            onAddRecipe={handleAddRecipe} 
+            onSelectRecipe={handleSelectRecipe} 
+          />} 
+        />
+        <Route 
+          path="/add-recipe" 
+          element={<AddRecipe onAddRecipe={handleAddRecipe} />} 
+        />
+        {selectedRecipeId && (
+          <Route 
+            path="/recipe-details/:id" 
+            element={<RecipeDetails recipes={recipes} selectedRecipeId={selectedRecipeId} />} 
+          />
         )}
+      </Routes>
     </div>
-);
+  );
 }
 
 export default App;
